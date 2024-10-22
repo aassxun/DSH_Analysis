@@ -10,6 +10,11 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"  #,4,5,6,7
 import hashnet
 import csq
+import DPAH
+import DCDH
+import AGMH
+import CHN
+import DAHNet_train as DAH
 import A_2_Net
 import SEMICON_train as SEMICON_Net
 from set_flag import load_args
@@ -31,7 +36,7 @@ def seed_everything(seed):
     torch.backends.cudnn.deterministic = True
 
 def run():
-    seed_everything(42)
+    seed_everything(68)
     args = load_config()
     log_path = 'logs/' + args.arch + '-' + args.net + '/' + args.info
     if not os.path.exists(log_path):
@@ -45,6 +50,8 @@ def run():
     logger.success(args)
     #time:YYYY-MM-DD HH
     # Load dataset
+    for i in tqdm(range(1),ncols=100,desc=f"{args.arch} is sleeping"):
+        time.sleep(1)
     query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader = load_data(
             args.dataset,
             args.root,
@@ -54,22 +61,27 @@ def run():
             args.num_workers,
             args.num_zs,
         )
-    for i in tqdm(range(1),ncols=100,desc=f"{args.arch} is sleeping"):
-        time.sleep(1)
 
     if args.arch == 'baseline':
         net_arch = adsh
-        ### 用resnet50（分类头数量等于比特数） 直接生成hashcode
     elif args.arch == 'exchnet':
         net_arch = adsh_exchnet
+    elif args.arch == 'hrnet':
+        net_arch = adsh_hr
     elif args.arch == 'hashnet':
         net_arch = hashnet
     elif args.arch == 'csq':
         net_arch = csq
     elif args.arch == 'a2net':
         net_arch = A_2_Net
+    elif args.arch == 'a2netmini':
+        net_arch = A_2_Net_mini
     elif args.arch == 'semicon':
         net_arch = SEMICON_Net
+    elif args.arch == 'dch':
+        net_arch = dch
+    elif args.arch == 'cirhash':
+        net_arch = cirhash
     elif args.arch == 'fish':
         net_arch = fish
     elif args.arch == 'ortho':
@@ -78,8 +90,20 @@ def run():
         net_arch = psldh
     elif args.arch == 'hyp2':
         net_arch = hyp2
+    elif args.arch == 'rcdh':
+        net_arch = rcdh
     elif args.arch == 'dsh':
         net_arch = dsh
+    elif args.arch == 'dpah':
+        net_arch = DPAH
+    elif args.arch == 'dcdh':
+        net_arch = DCDH
+    elif args.arch == 'agmh':
+        net_arch = AGMH
+    elif args.arch == 'chn':
+        net_arch = CHN
+    elif args.arch == 'dah':
+        net_arch = DAH
     if args.arch == 'center':
         net_arch = center
     for code_length in args.code_length:
@@ -106,7 +130,7 @@ def load_config():
                         help='Dataset name.')
     parser.add_argument('--root',
                         help='Path of dataset')
-    parser.add_argument('--batch-size', default=64, type=int,
+    parser.add_argument('--batch-size', default=16, type=int,
                         help='Batch size.(default: 64)')
     parser.add_argument('--lr', default=1e-4, type=float,
                         help='Learning rate.(default: 1e-4)')
@@ -172,13 +196,19 @@ def load_config():
                         help='Number of zero-shot classes(default: 50)')
     parser.add_argument('--epoch-change', default=11, type=int,
                         help='Using for center hash')
-    # parser.add_argument('--pk', default=80, type=int,
-    #                     help='Number of epochs.(default: 3)')
+    parser.add_argument('--ZS', default=5, type=int,
+                        help='percentage of zero-shot')
+    parser.add_argument('--flag', default="adsh", type=str,
+                        help='method')
+    parser.add_argument('--data', default='cub200', type=str,
+                        help='method')
+
     args = parser.parse_args()
 #-------------------------------------------------------------------------
 
-    flag = "psldh" #  exchnet  csq  hashnet  a2net    center  hyp2  dsh
-                    #adsh  semicon  fish   ortho psldh
+    flag = args.flag #  exchnet  csq  hashnet  a2net    center  hyp2  dsh
+                    #adsh  semicon a2netmini fish   ortho psldh rcdh
+                    # dpah dcdh agmh
     print("train {}".format(flag))
     args = load_args(args,flag)
 
