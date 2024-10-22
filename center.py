@@ -20,13 +20,13 @@ from models.center_resnet import ResNet as center_resnet
 from utils.optimizeAccel import get_hash_centers
 
 # MDSH
-class OurLoss(NN.Module):
+class MDSHLoss(NN.Module):
     def __init__(self,  bit, num_classes, device,hash_center_root=None,epoch_change=1):
         """
         :param config: in paper, the hyper-parameter lambda is chose 0.0001
         :param bit:
         """
-        super(OurLoss, self).__init__()
+        super(MDSHLoss, self).__init__()
         self.epoch_change = epoch_change
         # self.config = config
         self.bit = bit
@@ -156,7 +156,7 @@ def train(
     scheduler = optim.lr_scheduler.MultiStepLR(optimizer, args.lr_step)
     hash_center_root = os.path.join('hash_centers', f"num_classes-{args.num_classes}-bit-{code_length}.npy")
 
-    criterion = OurLoss(code_length, args.num_classes, device, hash_center_root,args.epoch_change).to(device)
+    criterion = MDSHLoss(code_length, args.num_classes, device, hash_center_root,args.epoch_change).to(device)
 
 
     # losses = AverageMeter()
