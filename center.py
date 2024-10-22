@@ -19,6 +19,7 @@ import torch.nn as NN
 from models.center_resnet import ResNet as center_resnet
 from utils.optimizeAccel import get_hash_centers
 
+# MDSH
 class OurLoss(NN.Module):
     def __init__(self,  bit, num_classes, device,hash_center_root=None,epoch_change=1):
         """
