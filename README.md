@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 # An Empirical Study on Training Paradigms for Deep Supervised Hashing
 
 This project focuses on systematically evaluating the two main training paradigms in deep supervised hashing: pairwise hashing and pointwise hashing. Deep supervised hashing has become essential for large-scale image retrieval tasks, offering efficient storage and retrieval capabilities by transforming high-dimensional image data into compact binary hash codes. The study provides an extensive quantitative exploration, comparing the performance of these paradigms across multiple datasets.
@@ -20,7 +19,7 @@ The experiments are conducted on both single-label and multi-label datasets, uti
 3. **unseen@unseen**: Both query images and database images are from unseen classes.
 4. **unseen@all**: Expanding on the "unseen@unseen" basis, the database is extended to include both seen and unseen images.
 
-The evaluation metrics for these four tasks are **mAP@$k$**, calculated as:
+The evaluation metrics for these four tasks are mAP@k, calculated as:
 
 $${\rm mAP}@k = \frac{1}{Q} \sum_{q=1}^{Q} \frac{1}{\min (m_q, k)} \sum_{t=1}^{\min (n_q,k)} P_q(t)rel_q(t)$$
 
