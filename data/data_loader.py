@@ -22,6 +22,7 @@ import data.flickr25k as flickr25k
 import data.imagenet as imagenet
 import data.cub_2011 as cub2011
 import data.nuswide_zs as nuswide_zs
+import data.flickr25kzs as flickr25kzs
 import data.nabirds as nabirds
 import data.cub_2011_for_zero_shot as cub2011_for_zero_shot
 import data.cifar100zs as cifar100zs
@@ -32,6 +33,7 @@ import data.stanforddogzs as stanforddogzs
 import data.aircraftzs as aircraftzs
 import data.nabirdszs as nabirdszs
 import data.imagenetzs as imagenetzs
+import data.cocozs as cocozs
 from data.transform import train_transform, encode_onehot
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -74,6 +76,15 @@ def load_data(dataset, root, num_query, num_train, batch_size, num_workers, num_
                                      batch_size,
                                      num_workers
                                      )
+    elif dataset == 'cocozs':
+        query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader = cocozs.load_data(
+                                     root,
+                                     batch_size,
+                                     num_workers,
+                                     zero_shot_classes=num_zs,
+                                     )
+        return query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader
+
     elif dataset == 'flickr25k':
         query_dataloader, train_dataloader, retrieval_dataloader = flickr25k.load_data(root,
                                        num_query,
@@ -109,6 +120,13 @@ def load_data(dataset, root, num_query, num_train, batch_size, num_workers, num_
         return query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader
     elif dataset == 'nus-widezs':
         query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader = nuswide_zs.load_data(root,
+                                      batch_size,
+                                      num_workers,
+                                      zero_shot_classes=num_zs,
+                                      )
+        return query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader
+    elif dataset == 'flickr25kzs':
+        query_dataloader, train_dataloader, retrieval_dataloader,query4zero_shot_dataloader, database4zero_shot_dataloader = flickr25kzs.load_data(root,
                                       batch_size,
                                       num_workers,
                                       zero_shot_classes=num_zs,

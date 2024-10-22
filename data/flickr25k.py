@@ -80,7 +80,7 @@ class Flickr25k(Dataset):
             raise ValueError(r'Invalid arguments: mode, can\'t load dataset!')
 
     def __getitem__(self, index):
-        img = Image.open(os.path.join(self.root, 'images', self.data[index])).convert('RGB')
+        img = Image.open(os.path.join(self.root, self.data[index])).convert('RGB')
         if self.transform is not None:
             img = self.transform(img)
         return img, self.targets[index], index
